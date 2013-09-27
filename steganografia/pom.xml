@@ -12,7 +12,6 @@
 	<version>0.0.1-SNAPSHOT</version>
 
 	<organization>
-		<!-- Used as the 'Vendor' for JNLP generation -->
 		<name>ok</name>
 	</organization>
 
