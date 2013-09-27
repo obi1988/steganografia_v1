@@ -20,7 +20,7 @@
 	</properties>
 
 	<build>
-
+ 
 		<finalName>steganografia</finalName>
 
 		<plugins>
