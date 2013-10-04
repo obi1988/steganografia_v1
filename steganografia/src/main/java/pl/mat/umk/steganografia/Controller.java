@@ -14,8 +14,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 
-public class Controller {
-//	private static final Logger log = LoggerFactory.getLogger(Controller.class);
+public class Controller implements SliderActionListener{
+// 	private static final Logger log = LoggerFactory.getLogger(Controller.class);
 
 	private PictureAction action = new PictureAction();
 	private InputStream input = null;
@@ -63,7 +63,7 @@ public class Controller {
 	@FXML
 	public void actionMenuChoose(ActionEvent actionEvent){
 
-		File f = new File(action.getFile(true));
+		File f = new File(action.getFile(true,true));
 		Image img = new Image(f.toURI().toString());
 		imgView.setImage(img);
 		action.setFile(f);
@@ -76,7 +76,7 @@ public class Controller {
 		
 		try{
 			File f = null;
-			String path = action.getFile(true);
+			String path = action.getFile(true,false);
 			if(path != null && !path.equals("")){
 				f = new File(path);
 				byte [] b; 
@@ -95,7 +95,7 @@ public class Controller {
 	@FXML
 	public void actionMenuStart(ActionEvent actionEvent) {
 
-		
+		action.setSliderListener(this);		 
 		if(!action.isZaladowanyObraz ){
 			Dialog.showWarning("Ostrzeżenie", "Plik z obrazem nie został jeszcze wczytany.");
 			return;
@@ -131,5 +131,10 @@ public class Controller {
 		}
 		action.saveFile(this.input);
  }
+
+	public void setSliders(int values) {
+		progBar.setProgress(values);
+		progIndi.setProgress(values); 		
+	}
 	
 }

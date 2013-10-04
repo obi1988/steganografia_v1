@@ -1,5 +1,6 @@
 package pl.mat.umk.steganografia;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -12,7 +13,6 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
-import javafx.scene.shape.Path;
 import javafx.stage.FileChooser;
 import pl.mat.umk.steganografia.files.Bitmap;
 
@@ -20,6 +20,7 @@ public class PictureAction {
 
 	private PictureData data = new PictureData();
 	private byte [] byteText;
+	SliderActionListener sliderAction;
 
 	public void setByteText(byte[] byteText) {
 		this.byteText = byteText;
@@ -36,7 +37,7 @@ public class PictureAction {
 		isZaladowanyObraz = true;
 	}
 	
-	public String getFile(boolean isOpen){
+	public String getFile(boolean isOpen, boolean isGraphic){
 		
 		FileChooser fchoose = new FileChooser();
 		File f ;
@@ -45,7 +46,8 @@ public class PictureAction {
 		fchoose.setInitialDirectory(new File(System.getProperty("user.home")+"/Desktop/"));
 		
 		if(isOpen){
-			fchoose.getExtensionFilters().addAll(
+			if(isGraphic)
+				fchoose.getExtensionFilters().addAll(
 	                new FileChooser.ExtensionFilter("All Images", "*.*"),
 	                new FileChooser.ExtensionFilter("JPG", "*.jpg"),
 	                new FileChooser.ExtensionFilter("PNG", "*.png")
@@ -73,28 +75,24 @@ public class PictureAction {
 	}
 	
 	public InputStream start(ProgressBar progBar, ProgressIndicator progIndi){
-		InputStream im = null;
+		byte[] dataBIT = null;
 		try {
-			progBar.setProgress(1);
-			progIndi.setProgress(1);
+			sliderAction.setSliders(1);
 //			byte[] b = data.extractBytesImage(this.file);
 //			byte[] b = data.extractBytesImage2(this.file);
 			
 			byte []b = Files.readAllBytes(Paths.get(this.file.getAbsolutePath()));
 			byte []c = data.textToBinary(b);
 			
-			byte[] dataBIT = data.saveText(b, new byte[] {0,0,0,1,0,0,1});
-			progBar.setProgress(2);
-			progIndi.setProgress(2);
+			dataBIT = data.saveText(c, new byte[] {0,0,0,1,0,0,1});
+			sliderAction.setSliders(2);
 			
-			
-			im = data.toImage(c,byteText);
-			data.setBitmap(bmp, c);
+			data.setBitmap(bmp, dataBIT);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return im;
+		return new ByteArrayInputStream(dataBIT);
 	}
 	
 	
@@ -133,7 +131,7 @@ public class PictureAction {
 		
 	        try {
 	        	inputStream.reset();    	
-	        	String path = getFile(false);
+	        	String path = getFile(false,false);
 	        	
 	        	if(!path.equals(""))
 	        	{
@@ -168,5 +166,9 @@ public class PictureAction {
 	        }
 	         
 	    }
+	
+	public void setSliderListener(SliderActionListener listener){
+		this.sliderAction = listener; 
+	}
 	
 }

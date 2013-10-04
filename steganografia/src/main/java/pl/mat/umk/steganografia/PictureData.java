@@ -224,7 +224,8 @@ public class PictureData {
 		
 		byte [] wynik = new byte[array.length*8];
 		String result = "";
-		for(int i=0; i< (array.length > 1000 ? 1000 : array.length); i = i+8){
+//		for(int i=0; i< (array.length > 1000 ? 1000 : array.length); i = i+8){
+		for(int i=0; i< (array.length > 1000 ? 1000 : array.length); i++){
 			/*for(int j=0;j < 8; j++){
 				wynik[i] = String.format("%8s", Integer.toBinaryString(array[i] & 0xFF)).replace(' ', '0').getBytes()[0];
 			} ne dziala poprawnie*/
