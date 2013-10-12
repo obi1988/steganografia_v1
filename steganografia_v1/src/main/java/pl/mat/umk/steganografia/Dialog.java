@@ -185,87 +185,6 @@ public class Dialog extends Stage {
             stage.centerOnScreen();
         }
         
-        // NOTE: invoke once during Dialog creating
-        private Builder setStackTrace(Throwable t) {
-            // view button
-            stage.viewStacktraceButton = new ToggleButton("View stacktrace");
-            
-            // copy button
-            stage.copyStacktraceButton = new Button("Copy to clipboard");
-            HBox.setMargin(stage.copyStacktraceButton, new Insets(0, 0, 0, MARGIN));
-            
-            stage.stacktraceButtonsPanel = new HBox();
-            stage.stacktraceButtonsPanel.getChildren().addAll(
-                stage.viewStacktraceButton, stage.copyStacktraceButton);
-            VBox.setMargin(stage.stacktraceButtonsPanel, new Insets(MARGIN, MARGIN, MARGIN, 0));
-            stage.messageBox.getChildren().add(stage.stacktraceButtonsPanel);
-                    
-            // stacktrace text
-            stage.stackTraceLabel = new Label();
-            stage.stackTraceLabel.widthProperty().addListener(new ChangeListener<Number>() {
-
-                public void changed(ObservableValue<? extends Number> ov, Number oldValue, Number newValue) {
-                    alignScrollPane();
-                }
-            });
-            
-            stage.stackTraceLabel.heightProperty().addListener(new ChangeListener<Number>() {
-
-                public void changed(ObservableValue<? extends Number> ov, Number oldValue, Number newValue) {
-                    alignScrollPane();
-                }
-            });
-            
-            StacktraceExtractor extractor = new StacktraceExtractor();
-            stage.stacktrace = extractor.extract(t);
-
-            stage.scrollPane = new ScrollPane();
-            stage.scrollPane.setContent(stage.stackTraceLabel);
-            
-            stage.viewStacktraceButton.setOnAction(new EventHandler<ActionEvent>() {
-
-                public void handle(ActionEvent t) {
-                    stage.stacktraceVisible = !stage.stacktraceVisible;
-                    if (stage.stacktraceVisible) {
-                        stage.messageBox.getChildren().add(stage.scrollPane);
-                        stage.stackTraceLabel.setText(stage.stacktrace);
-                        
-                        alignScrollPane();
-                    } else {
-                        stage.messageBox.getChildren().remove(stage.scrollPane);
-                        
-                        //alignScrollPane();
-                        stage.setWidth(stage.originalWidth);
-                        stage.setHeight(stage.originalHeight);
-                        stage.stackTraceLabel.setText(null);
-                        stage.centerOnScreen();
-                    }
-                    stage.messageBox.layout();
-                }
-            });
-            
-            stage.copyStacktraceButton.setOnAction(new EventHandler<ActionEvent>() {
-
-                public void handle(ActionEvent t) {
-                    Clipboard clipboard = Clipboard.getSystemClipboard();
-                    Map<DataFormat, Object> map = new HashMap<DataFormat, Object>();
-                    map.put(DataFormat.PLAIN_TEXT, stage.stacktrace);
-                    clipboard.setContent(map);
-                }
-            });
-            
-            stage.showingProperty().addListener(new ChangeListener<Boolean>() {
-
-                public void changed(ObservableValue<? extends Boolean> ov, Boolean oldValue, Boolean newValue) {
-                    if (newValue) {
-                        stage.originalWidth = stage.getWidth();
-                        stage.originalHeight = stage.getHeight();
-                    }
-                }
-            });
-            
-            return this;
-        }
         
         protected void setIconFromResource(String resourceName) {
 
@@ -300,10 +219,6 @@ public class Dialog extends Stage {
             return this;
         }
         
-        protected Builder setThrowableIcon() {
-            setIconFromResource(ICON_PATH + "bugIcon.png");
-            return this;
-        }
         
         protected Builder setInfoIcon() {
             setIconFromResource("/images/infoIcon.png");
@@ -311,7 +226,7 @@ public class Dialog extends Stage {
         }
         
         protected Builder setConfirmationIcon() {
-            setIconFromResource(ICON_PATH + "confirmationIcon.png");
+            setIconFromResource("/images/confirm1.png");
             return this;
         }
                 
@@ -335,7 +250,6 @@ public class Dialog extends Stage {
 
       	  stage.progBar.progressProperty().addListener(new ChangeListener<Number>() {
      	      public void changed(ObservableValue<? extends Number> ov, Number t, Number newValue) {
-     	          // If progress is 100% then show Text
      	          if (newValue.doubleValue() >= 1) {
      	         	 stage.close();
      	          }
@@ -351,51 +265,7 @@ public class Dialog extends Stage {
            return this;
        }
         
-        public Builder addConfirmationButton(String buttonCaption, final EventHandler actionHandler) {
-            Button confirmationButton = new Button(buttonCaption);
-            confirmationButton.setMinWidth(BUTTON_WIDTH);
-            confirmationButton.setOnAction(new EventHandler<ActionEvent>() {
-
-                public void handle(ActionEvent t) {
-                    stage.close();
-                    if (actionHandler != null)
-                        actionHandler.handle(t);
-                }
-            });
-            
-            stage.buttonsPanel.getChildren().add(confirmationButton);
-            return this;
-        }
         
-        /**
-* Add Yes button to confirmation dialog
-*
-* @param actionHandler action handler
-* @return
-*/
-        public Builder addYesButton(EventHandler actionHandler) {
-            return addConfirmationButton("Yes", actionHandler);
-        }
-        
-        /**
-* Add No button to confirmation dialog
-*
-* @param actionHandler action handler
-* @return
-*/
-        public Builder addNoButton(EventHandler actionHandler) {
-            return addConfirmationButton("No", actionHandler);
-        }
-        
-        /**
-* Add Cancel button to confirmation dialog
-*
-* @param actionHandler action handler
-* @return
-*/
-        public Builder addCancelButton(EventHandler actionHandler) {
-            return addConfirmationButton("Cancel", actionHandler);
-        }
         
         /**
 * Build dialog
@@ -460,6 +330,19 @@ public class Dialog extends Stage {
                     .show();
     }
     
+    public static void showResults(String title, String message, Window owner) {
+       new Builder()
+           .create()
+           .setOwner(owner)
+           .setTitle(title)
+           .setConfirmationIcon()
+           .setMessage(message)
+           .addOkButton()
+               .build()
+                   .show();
+   }
+    
+    
     public static void showProgress(String title, String message, Window owner) {
        new Builder()
            .create()
@@ -480,6 +363,10 @@ public class Dialog extends Stage {
     public static void showWarning(String title, String message) {
         showWarning(title, message, null);
     }
+    public static void showResults(String title, String message) {
+   	 showResults(title, message, null);
+   }
+    
 
     public static void showProgress(String title, String message) {
        showProgress(title, message, null);
@@ -514,63 +401,5 @@ public class Dialog extends Stage {
         showError(title, message, null);
     }
     
-    /**
-* Show error dialog box with stacktrace
-*
-* @param title dialog title
-* @param message dialog message
-* @param t throwable
-* @param owner parent window
-*/
-    public static void showThrowable(String title, String message, Throwable t, Window owner) {
-        new Builder()
-            .create()
-            .setOwner(owner)
-            .setTitle(title)
-            .setThrowableIcon()
-            .setMessage(message)
-            .setStackTrace(t)
-            .addOkButton()
-                .build()
-                    .show();
-    }
     
-    /**
-* Show error dialog box with stacktrace
-*
-* @param title dialog title
-* @param message dialog message
-* @param t throwable
-*/
-    public static void showThrowable(String title, String message, Throwable t) {
-        showThrowable(title, message, t, null);
-    }
-    
-    /**
-* Build confirmation dialog builder
-*
-* @param title dialog title
-* @param message dialog message
-* @param owner parent window
-* @return
-*/
-    public static Builder buildConfirmation(String title, String message, Window owner) {
-        return new Builder()
-            .create()
-            .setOwner(owner)
-            .setTitle(title)
-            .setConfirmationIcon()
-            .setMessage(message);
-    }
-    
-    /**
-* Build confirmation dialog builder
-*
-* @param title dialog title
-* @param message dialog message
-* @return
-*/
-    public static Builder buildConfirmation(String title, String message) {
-        return buildConfirmation(title, message, null);
-    }
 }

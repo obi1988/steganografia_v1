@@ -140,7 +140,7 @@ public class Controller implements SliderActionListener{
 		}
 		String wynik = action.odszyfruj();
 		if(!wynik.equals(""))
-			Dialog.showWarning("Wiadomość zaszyfrowana", wynik);
+			Dialog.showResults("Wiadomość zaszyfrowana", wynik);
  }
 	
 	@FXML
