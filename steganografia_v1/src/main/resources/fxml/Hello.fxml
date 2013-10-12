@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.GridPane?>
+
+<GridPane alignment="TOP_CENTER" prefHeight="550.0" prefWidth="628.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="pl.mat.umk.steganografia.Controller">
+  <!-- TODO Add Nodes -->
+  <children>
+    <GridPane GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS">
+      <children>
+        <MenuBar GridPane.columnIndex="0" GridPane.columnSpan="4" GridPane.rowIndex="0" onKeyPressed="#handleKeyInput">
+          <menus>
+            <Menu mnemonicParsing="false" text="File" fx:id="menuFile">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#actionMenuChooseText" text="Open text..." fx:id="menuText" />
+                <MenuItem mnemonicParsing="false" onAction="#actionMenuChoose" text="Open image..." fx:id="menuChoose" />
+                <MenuItem mnemonicParsing="false" onAction="#actionMenuSave" text="Save..." fx:id="menuSave" />
+                <MenuItem mnemonicParsing="false" onAction="#actionClose" text="Zamknij" fx:id="menuClose" />
+              </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Action">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#actionMenuStart" text="Zaszyfruj" fx:id="menuStart" />
+                <MenuItem mnemonicParsing="false" onAction="#actionMenuOdszyfruj" text="Odszyfruj" fx:id="menuOdszyfruj" />
+                <MenuItem mnemonicParsing="false" text="Back" fx:id="menuToText" />
+                <MenuItem mnemonicParsing="false" onAction="#actionMenuClose" text="Clear" fx:id="menuClear" />
+              </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Help">
+              <items>
+                <MenuItem mnemonicParsing="false" text="About" onAction="#actionMenuAbout" fx:id="menuAbout" />
+              </items>
+            </Menu>
+          </menus>
+        </MenuBar>
+        <ImageView fx:id="imgView" fitHeight="437.5" fitWidth="583.3333509764657" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.rowSpan="2" GridPane.vgrow="ALWAYS">
+          <GridPane.margin>
+            <Insets top="5.0" />
+          </GridPane.margin>
+        </ImageView>
+        <CheckBox fx:id="checkObraz" disable="true" alignment="CENTER_RIGHT" mnemonicParsing="false" text="Załadowany obraz" textAlignment="LEFT" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+          <GridPane.margin>
+            <Insets right="15.0" />
+          </GridPane.margin>
+        </CheckBox>
+        <CheckBox fx:id="checkText" disable="true" mnemonicParsing="false" text="Załadowany Text" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+      </children>
+      <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="544.0" minWidth="10.0" prefWidth="37.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="544.0" minWidth="10.0" prefWidth="375.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="544.0" minWidth="10.0" prefWidth="206.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="314.0" minWidth="10.0" prefWidth="10.0" />
+      </columnConstraints>
+      <padding>
+        <Insets bottom="5.0" />
+      </padding>
+      <rowConstraints>
+        <RowConstraints maxHeight="150.0" minHeight="10.0" prefHeight="33.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="150.0" minHeight="10.0" prefHeight="33.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="332.0" minHeight="10.0" prefHeight="332.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="149.0" minHeight="10.0" prefHeight="149.0" vgrow="SOMETIMES" />
+      </rowConstraints>
+    </GridPane>
+    <ProgressBar fx:id="progBar" prefWidth="200.0" progress="0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+    <ProgressIndicator fx:id="progIndi" progress="0.0" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+  </children>
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="54.0" minWidth="10.0" prefWidth="54.0" />
+    <ColumnConstraints hgrow="ALWAYS" maxWidth="491.0" minWidth="10.0" prefWidth="491.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="303.0" minWidth="10.0" prefWidth="83.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints maxHeight="542.0" minHeight="10.0" prefHeight="521.0" vgrow="ALWAYS" />
+    <RowConstraints maxHeight="515.0" minHeight="8.0" prefHeight="29.0" vgrow="ALWAYS" />
+  </rowConstraints>
+</GridPane>
